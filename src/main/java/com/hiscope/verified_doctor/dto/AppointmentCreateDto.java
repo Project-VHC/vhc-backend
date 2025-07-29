@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AppointmentCreateDto {
 
-	 private String doctorEmail;
+	 	private String doctorEmail;
 	    private String userEmail;
 	    private String appointmentDateTime;
 	    private String appointmentType;

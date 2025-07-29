@@ -1,22 +1,14 @@
 package com.hiscope.verified_doctor.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.hiscope.verified_doctor.entity.DoctorVerification;
 import com.hiscope.verified_doctor.service.DoctorVerficationService;
-
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @CrossOrigin("*")
 @AllArgsConstructor
@@ -24,46 +16,51 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/doctorverfication")
 public class DoctorVerficationController {
 
-	@Autowired
-	private DoctorVerficationService doctorVerficationService;
-	
-	@PostMapping("/save")
-	public ResponseEntity<?> saveVerfication(@RequestParam String email,
-			@RequestParam String fullName,
-			@RequestParam String medicalLicenseNumber,
-			@RequestParam MultipartFile medicalLicenseFile,
-			@RequestParam String medicalSpeciality,
-			@RequestParam MultipartFile boardCertificateFile,
-			@RequestParam String educationalBackground,
-			@RequestParam MultipartFile educationalCertificateFile,
-			@RequestParam String hospitalCurrentWorking,
-			@RequestParam Integer experience,String hospitalOrClinic,
-			@RequestParam String disciplinaryActions,String description,
-			@RequestParam String personalAddress, @RequestParam Long mobileNumber,@RequestParam String gender,
-			@RequestParam String launguages,@RequestParam String hospitalAddress,@RequestParam String medicalLicenseNumberExpiryDate,
-			@RequestParam MultipartFile doctorPhoto
-			) {
-		
-		try {
-           String doctor = doctorVerficationService.saveVerification(email,fullName,medicalLicenseNumber,medicalLicenseFile,
-            		medicalSpeciality,boardCertificateFile,educationalBackground,educationalCertificateFile,hospitalCurrentWorking,
-            		experience,hospitalOrClinic,disciplinaryActions,description,personalAddress,mobileNumber,gender,
-				   launguages,hospitalAddress,medicalLicenseNumberExpiryDate,doctorPhoto
-                    );
+    @Autowired
+    private DoctorVerficationService doctorVerficationService;
+
+    @PostMapping("/save")
+    public ResponseEntity<?> saveVerfication(@RequestParam String email,
+                                             @RequestParam String fullName,
+                                             @RequestParam String medicalLicenseNumber,
+                                             @RequestParam MultipartFile medicalLicenseFile,
+                                             @RequestParam String medicalSpeciality,
+                                             @RequestParam MultipartFile boardCertificateFile,
+                                             @RequestParam String educationalBackground,
+                                             @RequestParam MultipartFile educationalCertificateFile,
+                                             @RequestParam String hospitalCurrentWorking,
+                                             @RequestParam Integer experience, String hospitalOrClinic,
+                                             @RequestParam String disciplinaryActions, String description,
+                                             @RequestParam String personalAddress,
+                                             @RequestParam Long mobileNumber,
+                                             @RequestParam String gender,
+                                             @RequestParam String launguages,
+                                             @RequestParam String hospitalAddress,
+                                             @RequestParam String medicalLicenseNumberExpiryDate,
+                                             @RequestParam MultipartFile doctorPhoto
+    ) {
+
+        try {
+            String doctor = doctorVerficationService.saveVerification(email, fullName, medicalLicenseNumber, medicalLicenseFile,
+                    medicalSpeciality, boardCertificateFile, educationalBackground, educationalCertificateFile, hospitalCurrentWorking,
+                    experience, hospitalOrClinic, disciplinaryActions, description, personalAddress, mobileNumber, gender,
+                    launguages, hospitalAddress, medicalLicenseNumberExpiryDate, doctorPhoto
+            );
             return ResponseEntity.ok(doctor);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error registering doctor: " + e.getMessage());
         }
-		
-	}
-	 @GetMapping("/all")
-	    public ResponseEntity<List<DoctorVerification>> getAllDoctors() {
-	        return ResponseEntity.ok(doctorVerficationService.getAllDoctor());
-	    }
-	
-	 @GetMapping("/get/{email}")
-	 public ResponseEntity<DoctorVerification> getDoctordetailByEmail(@PathVariable("email") String email){
-		 
-		 return ResponseEntity.ok(doctorVerficationService.getDoctorByEmail(email));
-	 }
+
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<DoctorVerification>> getAllDoctors() {
+        return ResponseEntity.ok(doctorVerficationService.getAllDoctor());
+    }
+
+    @GetMapping("/get/{email}")
+    public ResponseEntity<DoctorVerification> getDoctordetailByEmail(@PathVariable("email") String email) {
+
+        return ResponseEntity.ok(doctorVerficationService.getDoctorByEmail(email));
+    }
 }
