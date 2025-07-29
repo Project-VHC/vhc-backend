@@ -9,20 +9,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "diagnosticsVerifications")
+@Table(name = "pharmacist_verification")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DiagnosticsVerification {
+public class PharmacistVerification {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "diagnostics_id")
+    @JoinColumn(name = "pharmacist")
     @JsonIgnore
-    private Diagnostics diagnostics;
+    private  Pharmacist pharmacist;
+
 
     @Column(nullable = false)
     private String fullName;
@@ -42,14 +44,14 @@ public class DiagnosticsVerification {
 
 
     @Column(nullable = false)
-    private String diagnosticsLicenseNumber;
+    private String medicalLicenseNumber;
 
     @Column(nullable = false)
-    private String diagnosticsLicenseNumberExpiryDate;
+    private String medicalLicenseNumberExpiryDate;
 
     @Lob
     @Column(columnDefinition = "LONGBLOB")
-    private byte[] diagnosticsLicenseFile;
+    private byte[] medicalLicenseFile;
 
     @Column(nullable = false)
     private String medicalSpeciality;
@@ -87,7 +89,7 @@ public class DiagnosticsVerification {
 
     @Lob
     @Column(columnDefinition = "LONGBLOB")
-    private byte[] diagnosticsPhoto;
+    private byte[] PharmacistPhoto;
 
     @Column(nullable = false)
     private String verificationStatus = "PENDING"; // PENDING, APPROVED, REJECTED
@@ -103,5 +105,4 @@ public class DiagnosticsVerification {
         submittedAt = java.time.LocalDateTime.now();
     }
 }
-
 
