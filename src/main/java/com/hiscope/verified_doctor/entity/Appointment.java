@@ -18,7 +18,13 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "pharmacist_id")
+    private Pharmacist pharmacist;
+
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "doctor_email", nullable = false)
