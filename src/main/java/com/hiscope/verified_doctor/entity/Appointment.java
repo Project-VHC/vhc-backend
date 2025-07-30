@@ -22,6 +22,7 @@ public class Appointment {
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "pharmacist_id")
+
     private Pharmacist pharmacist;
 
 
