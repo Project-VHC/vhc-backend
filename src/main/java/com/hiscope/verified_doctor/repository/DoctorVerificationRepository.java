@@ -11,7 +11,10 @@ import com.hiscope.verified_doctor.entity.DoctorVerification;
 @Repository
 public interface DoctorVerificationRepository extends JpaRepository<DoctorVerification, Long>{
 
+	Optional<DoctorVerification> findByEmail(String email);
 	Optional<DoctorVerification> findByDoctor(Doctor doctor);
+
+	boolean existsByEmail(String email);
 
 
 

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.hiscope.verified_doctor.config.SvgQrGenerator;
+import com.hiscope.verified_doctor.dto.VerificationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -90,8 +92,30 @@ public class DoctorVerficationService {
 	        return doctorVerificationRepository.findByDoctor(doctor)
 	                .orElseThrow(() -> new RuntimeException("Verification data not found for: " + email));
 	}
-	
-	
-	
 
+
+	@Transactional
+	public void verification(VerificationDto dto) {
+		DoctorVerification doctor = doctorVerificationRepository.findByEmail(dto.getEmail())
+				.orElseThrow(() -> new RuntimeException("Email not found"));
+
+		//update status
+     doctor.setVerificationStatus(dto.getVerificationStatus());
+
+		String baseUrl = "doctorID/";
+		String fullUrl = baseUrl + dto.getEmail();
+		doctor.setVerificationUrl(fullUrl);
+		String qrSvg = SvgQrGenerator.generateSvg(fullUrl, 200, 200);
+		doctor.setQrCodeSvg(qrSvg);
+		//save  the changes
+		doctorVerificationRepository.save(doctor);
+
+
+	}
+
+	public String getQrCode(String email) {
+		DoctorVerification doctor = doctorVerificationRepository.findByEmail(email)
+				.orElseThrow(() -> new RuntimeException("Email not found"));
+		return doctor.getQrCodeSvg();
+	}
 }

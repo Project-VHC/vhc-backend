@@ -81,6 +81,12 @@ public class DoctorVerification {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String qrCodeSvg;
+
+    @Column(columnDefinition = "TEXT")
+    private String verificationUrl;
+
     @Column(nullable = false)
   private String hospitalAddress;
 
@@ -92,7 +98,7 @@ public class DoctorVerification {
     private byte[] doctorPhoto;
     
     @Column(nullable = false)
-    private String verificationStatus = "PENDING"; // PENDING, APPROVED, REJECTED
+    private String verificationStatus = "PENDING";// PENDING, APPROVED, REJECTED
     
     @Column(name = "submitted_at")
     private java.time.LocalDateTime submittedAt;
