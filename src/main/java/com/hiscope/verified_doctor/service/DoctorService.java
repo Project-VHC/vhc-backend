@@ -2,6 +2,8 @@ package com.hiscope.verified_doctor.service;
 
 import java.util.Optional;
 
+import com.hiscope.verified_doctor.Exception.EmailException;
+import com.hiscope.verified_doctor.Exception.PasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,10 @@ public class DoctorService {
 		
 		if(doctorRepository.existsByEmail(doctor.getEmail()))
 		{
-			throw new RuntimeException("Email is Already Taken! Please use a different Email");
+			throw new EmailException("email is already taken! use a different email");
 		}
 		if(!FormVallidation.isValidPassword(doctor.getPassword())) {
-			throw new RuntimeException("Password not under given validtion");
+			throw new PasswordException("Password not under given validtion");
 		}
 			doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
 		
@@ -35,13 +37,13 @@ public class DoctorService {
 	}
 	
 	public String loginDoctor(LoginDto loginDto) {
-		Doctor doctor=doctorRepository.findByEmail(loginDto.getEmail()).orElseThrow(()->new RuntimeException("Email Not Found"));
+		Doctor doctor=doctorRepository.findByEmail(loginDto.getEmail()).orElseThrow(()->  new  EmailException("Email Not Found"));
 		
 		if(passwordEncoder.matches(loginDto.getPassword(), doctor.getPassword())) {
-			return "Login Success welcome " + doctor.getEmail();
+			return "Login Success welcome " ;
 		}
 		
-		return "Login Failed Incorret Password";
+		throw new PasswordException("Login Failed Incorret Password");
 	}
 	
 	public String changePassword(String email, LoginDto loginDto) {
@@ -52,13 +54,13 @@ public class DoctorService {
 		String hashedPassword = doctor.getPassword();
 		if(passwordEncoder.matches(oldPassword, hashedPassword)) {
 			if(!FormVallidation.isValidPassword(loginDto.getPassword())) {
-				throw new RuntimeException("Password not under given validtion");
+				throw new PasswordException("Password not under given validtion");
 			}
 		doctor.setPassword(passwordEncoder.encode(loginDto.getPassword()));
 		doctorRepository.save(doctor);
 		}
 		else {
-			return "incorrect old password";
+			throw new PasswordException( "incorrect old password");
 		}
 		return "Password Changed Successfully";
 	}
