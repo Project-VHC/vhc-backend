@@ -34,8 +34,15 @@ public class DoctorController {
 		return doctorService.registerDoctor(doctor);
 	}
 	@PostMapping("/login")
-	public String loginDoctor(@RequestBody LoginDto loginDto) {
-		return doctorService.loginDoctor(loginDto);
+	public ResponseEntity<String> loginDoctor(@RequestBody LoginDto loginDto) {
+
+		String result=  doctorService.loginDoctor(loginDto);
+		if("Login Success welcome ".equals(result)) {
+			return ResponseEntity.ok(result);
+		}
+		else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result); // 401 Unauthorized
+		}
 	}
 	
 	@PutMapping("/changePassword/{email}")
