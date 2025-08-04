@@ -2,6 +2,8 @@ package com.hiscope.verified_doctor.service;
 
 import java.util.Optional;
 
+import com.hiscope.verified_doctor.Exception.EmailException;
+import com.hiscope.verified_doctor.Exception.PasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,10 +25,10 @@ public class UserService {
 	public User registerUser(User user) {
 		if(userRepository.existsByEmail(user.getEmail()))
 		{
-			throw new RuntimeException("Email is Already Taken! Please use a different Email");
+			throw new EmailException("Email is Already Taken! Please use a different Email");
 		}
 		if(!FormVallidation.isValidPassword(user.getPassword())) {
-			throw new RuntimeException("Password not under given validtion");
+			throw new PasswordException("Password not under given validtion");
 		}
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
@@ -54,13 +56,13 @@ public class UserService {
 		String hashedPassword = user.getPassword();
 		if(passwordEncoder.matches(oldPassword, hashedPassword)) {
 			if(!FormVallidation.isValidPassword(loginDto.getPassword())) {
-				throw new RuntimeException("Password not under given validtion");
+				throw new PasswordException("Password not under given validtion");
 			}
 		user.setPassword(passwordEncoder.encode(loginDto.getPassword()));
 		userRepository.save(user);
 		}
 		else {
-			return "incorrect old password";
+			return   "incorrect old password";
 		}
 		
 		return "Password Changed Successfully";
