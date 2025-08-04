@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.hiscope.verified_doctor.Exception.EmailException;
 import com.hiscope.verified_doctor.Exception.PasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,14 +38,17 @@ public class UserService {
 		
 	}
 	
-	public String loginUser(LoginDto loginDto) {
-		User user=userRepository.findByEmail(loginDto.getEmail()).orElseThrow(()->new RuntimeException("Email Not Found"));
+	public ResponseEntity<String> loginUser(LoginDto loginDto) {
+		User user=userRepository.findByEmail(loginDto.getEmail()).orElseThrow(()->new EmailException("Email Not Found"));
 		
 		if(passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-			return "Login Success welcome " + user.getEmail();
+			return ResponseEntity.ok("Login Success welcome " + user.getEmail());
 		}
 		
-		return "Login Failed Incorret Password";
+		return ResponseEntity
+				.status(HttpStatus.UNAUTHORIZED)
+				.body("Login Failed Incorrect Password");
+
 	}
 	
 	

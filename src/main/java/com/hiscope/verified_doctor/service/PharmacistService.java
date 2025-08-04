@@ -1,5 +1,6 @@
 package com.hiscope.verified_doctor.service;
 
+import com.hiscope.verified_doctor.Exception.EmailException;
 import com.hiscope.verified_doctor.dto.LoginDto;
 import com.hiscope.verified_doctor.dto.PharmacistDto;
 import com.hiscope.verified_doctor.entity.Appointment;
@@ -7,6 +8,8 @@ import com.hiscope.verified_doctor.entity.Pharmacist;
 import com.hiscope.verified_doctor.repository.AppointmentRepository;
 import com.hiscope.verified_doctor.repository.PharmacistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,15 +43,17 @@ public class PharmacistService {
     }
 
     // Login Pharmacist
-    public String loginPharmacist(LoginDto loginDto) {
+    public ResponseEntity<String> loginPharmacist(LoginDto loginDto) {
         Pharmacist pharmacist = pharmacistRepository.findByEmail(loginDto.getEmail())
-                .orElseThrow(() -> new RuntimeException("Email not found"));
+                .orElseThrow(() -> new EmailException("Email not found"));
 
         if (passwordEncoder.matches(loginDto.getPassword(), pharmacist.getPassword())) {
-            return "Login Success. Welcome " + pharmacist.getEmail();
+            return ResponseEntity.ok("Login Success. Welcome " + pharmacist.getEmail());
         }
 
-        return "Login Failed: Incorrect Password";
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("Login Failed Incorrect Password");
     }
 
     // Change Password
