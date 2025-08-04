@@ -24,7 +24,7 @@ public class DiagnosticsControler {
     }
 
     @PostMapping("/login")
-    public String loginDiagnostics(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<String> loginDiagnostics(@RequestBody LoginDto loginDto) {
         return diagnosticsService.loginDiagnostics(loginDto);
     }
 

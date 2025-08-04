@@ -27,7 +27,7 @@ public class PharmacistController {
 
     // Login Pharmacist
     @PostMapping("/login")
-    public String loginPharmacist(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<String> loginPharmacist(@RequestBody LoginDto loginDto) {
         return pharmacistService.loginPharmacist(loginDto);
     }
 
