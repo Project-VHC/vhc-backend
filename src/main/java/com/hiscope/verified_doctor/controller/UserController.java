@@ -1,23 +1,18 @@
 package com.hiscope.verified_doctor.controller;
 
+import com.hiscope.verified_doctor.dto.UserProfileDto;
+import com.hiscope.verified_doctor.entity.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hiscope.verified_doctor.dto.LoginDto;
 import com.hiscope.verified_doctor.entity.User;
 import com.hiscope.verified_doctor.service.UserService;
 
 import lombok.AllArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin("*")
 @AllArgsConstructor
@@ -38,7 +33,37 @@ public class UserController {
 
 		return userService.loginUser(loginDto);
 	}
-	
+
+
+
+	//user profile put endpoint
+	@PutMapping("/userProfile/update")
+	public ResponseEntity<String> userProfileUpdate(@ModelAttribute UserProfileDto userProfileDto,
+													@RequestParam(required = false) MultipartFile imageFile) {
+
+		UserProfile user = new UserProfile();
+		user.setEmail(userProfileDto.getEmail());
+		user.setPhoneNumber(userProfileDto.getPhoneNumber());
+		user.setAddress(userProfileDto.getAddress());
+		user.setGender(userProfileDto.getGender());
+		user.setAge(userProfileDto.getAge());
+
+		try {
+			if (imageFile != null && !imageFile.isEmpty()) {
+				user.setUserImage(imageFile.getBytes());
+			} else {
+				user.setUserImage(null);
+			}
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("Error uploading image: " + e.getMessage());
+		}
+
+		return ResponseEntity.ok(userService.userProfileUpdate(user));
+	}
+
+
+
+
 	@PutMapping("/changePassword/{email}")
 	public String changePassword(@PathVariable String email,@RequestBody LoginDto loginDto) {
 		return userService.changePassword(email,loginDto);

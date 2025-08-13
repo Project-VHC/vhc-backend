@@ -31,6 +31,9 @@ public class User {
     
     @Column(name = "created_at")
     private java.time.LocalDateTime createdAt;
+
+    @OneToOne(mappedBy="user", cascade = CascadeType.ALL)
+    private UserProfile profile;
     
     @PrePersist
     protected void onCreate() {
